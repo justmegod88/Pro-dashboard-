@@ -1,14 +1,21 @@
-# ACUVUE Insight Dashboard v3
+# ACUVUE Competitor Activity Crawler
 
-GitHub Pages에 바로 업로드 가능한 정적 HTML 대시보드입니다.
+알콘, 쿠퍼, 바슈롬 관련 공개 웹/뉴스/블로그 검색 결과를 수집해서 대시보드용 Excel로 정리합니다.
 
-## 반영 내용
-- 통합 검색: 안경사명 / 안경원코드 / 안경원명 중심 검색 (채널 검색 제외)
-- 채널: 다비치, 으뜸, 안경진정성, I/O, 기타
-- 상단 KPI: 대상 안경원, 통합 교육 완료율, 피팅 프로그램 사용률, 기능성렌즈 비중
-- 인사이트 보기: 교육 완료율, 피팅 프로그램 사용률, 상담 및 피팅, 기능성렌즈 비중, 안경사 인식, 경쟁사 활동
-- 상세 인사이트: 교육 세부, 관심 콘텐츠, 피팅 도구, 상담 및 피팅, 안경사 인식, 경쟁사 활동
-- 지도: 실제 대한민국 광역시별 지도 이미지 기반
+## 실행
 
-## 업로드 방법
-이 폴더 안의 파일을 GitHub Repository 루트에 그대로 업로드하세요.
+```bash
+pip install -r requirements.txt
+python competitor_watch_crawler.py --out competitor_activity.xlsx
+```
+
+## 결과 시트
+
+- `Competitor_Activity`: 대시보드에 넣기 좋은 요약 시트
+- `Raw_Posts`: 원문 제목/요약/URL/브랜드/지역/채널 추정값
+
+## 주의
+
+- Instagram 자동 크롤링은 로그인/약관/차단 이슈가 있어 제외했습니다.
+- 네이버 검색 HTML 구조는 바뀔 수 있어, 결과가 적으면 selector 수정이 필요할 수 있습니다.
+- 회사 업무용이면 사내 보안/개인정보/저작권 정책 확인 후 사용하세요.
