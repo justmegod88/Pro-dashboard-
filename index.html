@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ACUVUE Professional Experience Dashboard</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">ACUVUE Professional Experience</p>
+        <h1>지역별 교육 · 스마트피팅 활성화 대시보드</h1>
+        <p class="page-copy">온라인 라이브, 온디맨드, 오프라인 교육 완료율과 교육 후 스마트피팅 사용, 샘플, 구매 전환까지 한 화면에서 봅니다.</p>
+      </div>
+      <div class="top-actions">
+        <label class="file-button primary" for="excelFile">Excel / CSV 업로드</label>
+        <input id="excelFile" type="file" accept=".xlsx,.xls,.csv" hidden />
+        <button id="loadSample" type="button">샘플 데이터</button>
+        <button id="downloadTemplate" type="button">템플릿 CSV</button>
+        <span id="fileName" class="file-name">기본 샘플 데이터</span>
+      </div>
+    </header>
+
+    <section class="summary-strip">
+      <article><span>통합 교육 완료율</span><strong id="totalEducationRate">-</strong><small>Online / On-demand / Offline 중 1개 이상 완료</small></article>
+      <article><span>스마트피팅 사용률</span><strong id="totalActivationRate">-</strong><small>교육 완료 → 사용 전환</small></article>
+      <article><span>샘플 → 구매 전환</span><strong id="nationalConversion">-</strong><small>Sample to Purchase</small></article>
+      <article><span>Follow-up 필요</span><strong id="totalFollowup">-</strong><small>Action Required</small></article>
+    </section>
+
+    <section class="education-strip">
+      <article><span>온라인 라이브 완료율</span><strong id="onlineRate">-</strong><small>Live training</small></article>
+      <article><span>온디맨드 완료율</span><strong id="ondemandRate">-</strong><small>On-demand training</small></article>
+      <article><span>오프라인 완료율</span><strong id="offlineRate">-</strong><small>Offline training</small></article>
+      <article><span>교육 미완료 계정</span><strong id="notEducatedCount">-</strong><small>Education gap</small></article>
+    </section>
+
+    <section class="control-strip">
+      <div>
+        <span>지도 기준</span>
+        <select id="metricSelect">
+          <option value="educationCompletionRate">통합 교육 완료율</option>
+          <option value="onlineCompletionRate">온라인 라이브 완료율</option>
+          <option value="ondemandCompletionRate">온디맨드 완료율</option>
+          <option value="offlineCompletionRate">오프라인 완료율</option>
+          <option value="activationRate">스마트피팅 사용률</option>
+          <option value="sampleRate">샘플 주문률</option>
+          <option value="conversionRate">샘플→구매 전환율</option>
+          <option value="mfShare">멀티포컬 비중</option>
+          <option value="toricShare">난시 비중</option>
+          <option value="competitorEvents">경쟁사 활동 건수</option>
+        </select>
+      </div>
+      <div class="legend"><span><i class="low"></i>Low</span><span><i class="mid"></i>Mid</span><span><i class="high"></i>High</span></div>
+    </section>
+
+    <section class="workspace">
+      <section class="map-panel">
+        <div class="panel-head">
+          <div>
+            <h2>대한민국 지역별 실행 현황</h2>
+            <p>지역 마커를 클릭하면 교육 유형별 완료율, 실행 Funnel, 우선 관리 안경원 리스트가 표시됩니다.</p>
+          </div>
+        </div>
+        <div id="koreaMap" class="korea-map"></div>
+        <div class="insight-box">
+          <span>AI-style Insight</span>
+          <p id="autoInsight">-</p>
+        </div>
+      </section>
+
+      <aside class="detail-panel">
+        <div class="detail-title">
+          <span id="selectedTerritory">Capital</span>
+          <h2 id="selectedRegion">서울</h2>
+          <small id="selectedRead">-</small>
+        </div>
+        <div class="metric-grid">
+          <div><span>통합 교육</span><strong id="educationRate">-</strong></div>
+          <div><span>온라인</span><strong id="detailOnlineRate">-</strong></div>
+          <div><span>온디맨드</span><strong id="detailOndemandRate">-</strong></div>
+          <div><span>오프라인</span><strong id="detailOfflineRate">-</strong></div>
+          <div><span>사용률</span><strong id="activationRate">-</strong></div>
+          <div><span>샘플률</span><strong id="sampleRate">-</strong></div>
+          <div><span>전환율</span><strong id="conversionRate">-</strong></div>
+          <div><span>경쟁사 활동</span><strong id="competitorEvents">-</strong></div>
+        </div>
+        <div class="funnel-box">
+          <div class="bar-row"><span>교육</span><div><i id="barEdu"></i></div><b id="barEduLabel">-</b></div>
+          <div class="bar-row"><span>사용</span><div><i id="barUse"></i></div><b id="barUseLabel">-</b></div>
+          <div class="bar-row"><span>샘플</span><div><i id="barSample"></i></div><b id="barSampleLabel">-</b></div>
+          <div class="bar-row"><span>구매</span><div><i id="barBuy"></i></div><b id="barBuyLabel">-</b></div>
+        </div>
+        <div class="action-box">
+          <span>추천 액션</span>
+          <p id="recommendation">-</p>
+        </div>
+        <div class="target-box">
+          <div class="target-head"><strong>Follow-up 우선 안경원</strong><small id="targetMeta">-</small></div>
+          <div id="targetList" class="target-list"></div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="table-panel">
+      <div class="panel-head compact">
+        <div><h2>지역별 요약</h2><p>교육 유형별 완료율과 교육 후 행동 전환을 함께 봅니다.</p></div>
+        <button id="downloadCsv" type="button">결과 CSV 다운로드</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>지역</th><th>계정</th><th>통합교육</th><th>온라인</th><th>온디맨드</th><th>오프라인</th><th>사용률</th><th>샘플률</th><th>전환율</th><th>경쟁사</th><th>Priority</th></tr></thead>
+          <tbody id="regionTable"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <script src="./app.js"></script>
+</body>
+</html>
