@@ -1,123 +1,117 @@
 <!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ACUVUE Professional Experience Dashboard</title>
-  <link rel="stylesheet" href="./styles.css" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ACUVUE Professional Experience Insight Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <style>
+    :root{
+      --ink:#172033;--muted:#667085;--line:#e6eaf0;--card:#ffffff;--canvas:#f5f7fb;
+      --blue:#0067b1;--navy:#0b2f63;--green:#12b76a;--amber:#f79009;--red:#f04438;--purple:#7a5af8;
+      --soft-blue:#eaf4ff;--soft-green:#eafaf2;--soft-amber:#fff4e5;--soft-red:#fff1f0;--soft-purple:#f1edff;
+    }
+    *{box-sizing:border-box} body{margin:0;background:var(--canvas);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR",Arial,sans-serif} button,input,select{font:inherit}
+    .shell{max-width:1680px;margin:0 auto;padding:24px}.topbar{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:16px}.eyebrow{margin:0 0 8px;color:var(--blue);font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase}h1{margin:0;font-size:32px;letter-spacing:-.03em}p{margin:0}.copy{margin-top:8px;color:var(--muted);font-size:14px}.actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.btn,.filebtn{border:1px solid var(--line);border-radius:999px;background:#fff;padding:10px 14px;font-weight:800;cursor:pointer}.primary{background:var(--blue);color:#fff;border-color:var(--blue)}.file{display:none}.filename{display:block;text-align:right;color:var(--muted);font-size:12px;margin-top:8px}
+    .summary{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:14px}.card,.panel{background:rgba(255,255,255,.9);border:1px solid var(--line);border-radius:22px;box-shadow:0 14px 36px rgba(16,24,40,.05)}.card{padding:16px}.card span,.mini-label{display:block;color:var(--muted);font-size:12px;font-weight:800}.card strong{display:block;margin-top:8px;font-size:25px;letter-spacing:-.03em}.card small{display:block;margin-top:8px;color:var(--muted);font-size:12px;line-height:1.35}
+    .workspace{display:grid;grid-template-columns:1.15fr .85fr;gap:14px}.panel{padding:18px;min-width:0}.panel-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:14px}h2{margin:0;font-size:20px;letter-spacing:-.02em}.panel-head p{color:var(--muted);font-size:13px;margin-top:6px}.toggle{display:flex;background:#f1f4f8;border:1px solid var(--line);border-radius:999px;padding:4px;gap:4px}.toggle button{border:0;background:transparent;border-radius:999px;padding:7px 10px;font-weight:800;color:var(--muted);cursor:pointer}.toggle button.active{background:#fff;color:var(--blue);box-shadow:0 2px 8px rgba(16,24,40,.08)}
+    .map{position:relative;min-height:600px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,#fff,#f8fbff);overflow:hidden}.map svg{width:100%;height:100%;min-height:600px}.region{cursor:pointer;transition:.15s}.region:hover,.region.active{filter:drop-shadow(0 8px 12px rgba(0,103,177,.22));stroke:#0b2f63;stroke-width:3}.marker{pointer-events:none;font-size:13px;font-weight:900;fill:#0b2f63}.marker-value{font-size:11px;fill:#475467;font-weight:800}.legend{display:flex;gap:8px;color:var(--muted);font-size:12px;font-weight:800;align-items:center}.legend i{width:24px;height:10px;border-radius:999px;display:inline-block}.detail-title{border-bottom:1px solid var(--line);padding-bottom:14px}.badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:900}.best{background:var(--soft-green);color:#087443}.growth{background:var(--soft-purple);color:#5925dc}.follow{background:var(--soft-amber);color:#b54708}.risk{background:var(--soft-red);color:#b42318}.detail-title h2{margin-top:10px;font-size:26px}.detail-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}.metric{border:1px solid var(--line);border-radius:16px;padding:13px;background:#fff}.metric strong{display:block;margin-top:7px;font-size:22px}.score-wrap{margin-top:14px;display:grid;gap:10px}.score{background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px}.score-head{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:900}.track{height:10px;background:#edf1f7;border-radius:999px;margin-top:8px;overflow:hidden}.bar{height:100%;width:0;background:var(--blue);border-radius:999px}.bar.green{background:var(--green)}.bar.amber{background:var(--amber)}.bar.red{background:var(--red)}.insight{margin-top:14px;border:1px solid var(--line);border-radius:18px;background:#fff;padding:16px}.insight h3{margin:0 0 8px;font-size:16px}.insight p{color:#344054;line-height:1.55;font-size:14px}.actions-list{margin:12px 0 0;padding-left:18px;color:#344054;font-size:14px}.actions-list li+li{margin-top:6px}.funnel{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}.funnel article{border:1px solid var(--line);border-radius:16px;background:#fff;padding:14px}.funnel strong{display:block;font-size:22px;margin-top:7px}.funnel small{display:block;color:var(--muted);margin-top:6px}.table-panel{margin-top:14px}.table-wrap{overflow:auto}table{width:100%;border-collapse:separate;border-spacing:0 8px}th{text-align:left;color:var(--muted);font-size:12px;padding:0 12px}td{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:12px;font-size:13px}td:first-child{border-left:1px solid var(--line);border-radius:14px 0 0 14px;font-weight:900}td:last-child{border-right:1px solid var(--line);border-radius:0 14px 14px 0}.row-click{cursor:pointer}.row-click:hover td{background:#f8fbff}.template{margin-top:14px;padding:16px;border:1px dashed #b9c6d8;border-radius:18px;background:#fff}.template code{display:block;white-space:pre-wrap;color:#344054;font-size:12px;line-height:1.5}.footer{color:var(--muted);font-size:12px;text-align:center;margin-top:18px}
+    @media(max-width:1100px){.summary{grid-template-columns:repeat(2,1fr)}.workspace{grid-template-columns:1fr}.topbar{display:block}.actions{justify-content:flex-start;margin-top:14px}.funnel{grid-template-columns:repeat(2,1fr)}}
+  </style>
 </head>
 <body>
   <main class="shell">
     <header class="topbar">
-      <div>
-        <p class="eyebrow">ACUVUE Professional Experience</p>
-        <h1>지역별 교육 · 스마트피팅 활성화 대시보드</h1>
-        <p class="page-copy">온라인 라이브, 온디맨드, 오프라인 교육 완료율과 교육 후 스마트피팅 사용, 샘플, 구매 전환까지 한 화면에서 봅니다.</p>
-      </div>
-      <div class="top-actions">
-        <label class="file-button primary" for="excelFile">Excel / CSV 업로드</label>
-        <input id="excelFile" type="file" accept=".xlsx,.xls,.csv" hidden />
-        <button id="loadSample" type="button">샘플 데이터</button>
-        <button id="downloadTemplate" type="button">템플릿 CSV</button>
-        <span id="fileName" class="file-name">기본 샘플 데이터</span>
-      </div>
+      <div><p class="eyebrow">ACUVUE Professional Experience</p><h1>교육 → 스마트피팅 → 샘플 → 구매 전환 인사이트 대시보드</h1><p class="copy">지역별 교육 완료율과 실행 데이터를 연결해, 어디를 먼저 방문하고 어떤 액션을 해야 하는지 자동 코멘트로 보여줍니다.</p></div>
+      <div><div class="actions"><label class="filebtn primary" for="dataFile">Excel/CSV 업로드</label><input id="dataFile" class="file" type="file" accept=".xlsx,.xls,.csv"/><button class="btn" id="downloadTemplate">CSV 템플릿</button><button class="btn" id="resetSample">샘플 복원</button></div><span class="filename" id="fileName">샘플 데이터 사용 중</span></div>
     </header>
-
-    <section class="summary-strip">
-      <article><span>통합 교육 완료율</span><strong id="totalEducationRate">-</strong><small>Online / On-demand / Offline 중 1개 이상 완료</small></article>
-      <article><span>스마트피팅 사용률</span><strong id="totalActivationRate">-</strong><small>교육 완료 → 사용 전환</small></article>
-      <article><span>샘플 → 구매 전환</span><strong id="nationalConversion">-</strong><small>Sample to Purchase</small></article>
-      <article><span>Follow-up 필요</span><strong id="totalFollowup">-</strong><small>Action Required</small></article>
-    </section>
-
-    <section class="education-strip">
-      <article><span>온라인 라이브 완료율</span><strong id="onlineRate">-</strong><small>Live training</small></article>
-      <article><span>온디맨드 완료율</span><strong id="ondemandRate">-</strong><small>On-demand training</small></article>
-      <article><span>오프라인 완료율</span><strong id="offlineRate">-</strong><small>Offline training</small></article>
-      <article><span>교육 미완료 계정</span><strong id="notEducatedCount">-</strong><small>Education gap</small></article>
-    </section>
-
-    <section class="control-strip">
-      <div>
-        <span>지도 기준</span>
-        <select id="metricSelect">
-          <option value="educationCompletionRate">통합 교육 완료율</option>
-          <option value="onlineCompletionRate">온라인 라이브 완료율</option>
-          <option value="ondemandCompletionRate">온디맨드 완료율</option>
-          <option value="offlineCompletionRate">오프라인 완료율</option>
-          <option value="activationRate">스마트피팅 사용률</option>
-          <option value="sampleRate">샘플 주문률</option>
-          <option value="conversionRate">샘플→구매 전환율</option>
-          <option value="mfShare">멀티포컬 비중</option>
-          <option value="toricShare">난시 비중</option>
-          <option value="competitorEvents">경쟁사 활동 건수</option>
-        </select>
-      </div>
-      <div class="legend"><span><i class="low"></i>Low</span><span><i class="mid"></i>Mid</span><span><i class="high"></i>High</span></div>
-    </section>
-
+    <section class="summary" id="summary"></section>
     <section class="workspace">
-      <section class="map-panel">
-        <div class="panel-head">
-          <div>
-            <h2>대한민국 지역별 실행 현황</h2>
-            <p>지역 마커를 클릭하면 교육 유형별 완료율, 실행 Funnel, 우선 관리 안경원 리스트가 표시됩니다.</p>
-          </div>
-        </div>
-        <div id="koreaMap" class="korea-map"></div>
-        <div class="insight-box">
-          <span>AI-style Insight</span>
-          <p id="autoInsight">-</p>
-        </div>
-      </section>
-
-      <aside class="detail-panel">
-        <div class="detail-title">
-          <span id="selectedTerritory">Capital</span>
-          <h2 id="selectedRegion">서울</h2>
-          <small id="selectedRead">-</small>
-        </div>
-        <div class="metric-grid">
-          <div><span>통합 교육</span><strong id="educationRate">-</strong></div>
-          <div><span>온라인</span><strong id="detailOnlineRate">-</strong></div>
-          <div><span>온디맨드</span><strong id="detailOndemandRate">-</strong></div>
-          <div><span>오프라인</span><strong id="detailOfflineRate">-</strong></div>
-          <div><span>사용률</span><strong id="activationRate">-</strong></div>
-          <div><span>샘플률</span><strong id="sampleRate">-</strong></div>
-          <div><span>전환율</span><strong id="conversionRate">-</strong></div>
-          <div><span>경쟁사 활동</span><strong id="competitorEvents">-</strong></div>
-        </div>
-        <div class="funnel-box">
-          <div class="bar-row"><span>교육</span><div><i id="barEdu"></i></div><b id="barEduLabel">-</b></div>
-          <div class="bar-row"><span>사용</span><div><i id="barUse"></i></div><b id="barUseLabel">-</b></div>
-          <div class="bar-row"><span>샘플</span><div><i id="barSample"></i></div><b id="barSampleLabel">-</b></div>
-          <div class="bar-row"><span>구매</span><div><i id="barBuy"></i></div><b id="barBuyLabel">-</b></div>
-        </div>
-        <div class="action-box">
-          <span>추천 액션</span>
-          <p id="recommendation">-</p>
-        </div>
-        <div class="target-box">
-          <div class="target-head"><strong>Follow-up 우선 안경원</strong><small id="targetMeta">-</small></div>
-          <div id="targetList" class="target-list"></div>
-        </div>
-      </aside>
+      <section class="panel"><div class="panel-head"><div><h2>지역별 인사이트 지도</h2><p>색상은 선택한 지표 기준입니다. 지역을 클릭하면 상세 코멘트와 추천 액션이 바뀝니다.</p></div><div><div class="toggle" id="metricToggle"></div><div class="legend" style="margin-top:8px"><span><i style="background:#d1fadf"></i>Good</span><span><i style="background:#fedf89"></i>Mid</span><span><i style="background:#fecdca"></i>Risk</span></div></div></div><div class="map" id="map"></div></section>
+      <aside class="panel" id="detail"></aside>
     </section>
-
-    <section class="table-panel">
-      <div class="panel-head compact">
-        <div><h2>지역별 요약</h2><p>교육 유형별 완료율과 교육 후 행동 전환을 함께 봅니다.</p></div>
-        <button id="downloadCsv" type="button">결과 CSV 다운로드</button>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>지역</th><th>계정</th><th>통합교육</th><th>온라인</th><th>온디맨드</th><th>오프라인</th><th>사용률</th><th>샘플률</th><th>전환율</th><th>경쟁사</th><th>Priority</th></tr></thead>
-          <tbody id="regionTable"></tbody>
-        </table>
-      </div>
-    </section>
+    <section class="panel table-panel"><div class="panel-head"><div><h2>Follow-up 우선순위</h2><p>AI 규칙 기반 점수로 Immediate Action / Growth / Best Practice / At Risk를 자동 분류합니다.</p></div></div><div class="table-wrap"><table><thead><tr><th>지역</th><th>분류</th><th>통합교육</th><th>Smart Fitting</th><th>샘플→구매</th><th>성장점수</th><th>이탈위험</th><th>핵심 인사이트</th></tr></thead><tbody id="rankTable"></tbody></table></div></section>
+    <section class="template"><strong>업로드 컬럼명</strong><code>region,target_accounts,online_invited,online_completed,ondemand_sent,ondemand_completed,offline_invited,offline_completed,smart_fitting_users,sample_orders,purchase_accounts,mf_sales_ratio,toric_sales_ratio,competitor_mentions,days_since_last_activity</code></section>
+    <p class="footer">※ 샘플 데이터는 데모용입니다. 실제 교육/샘플/구매 데이터를 업로드하면 즉시 재계산됩니다.</p>
   </main>
-  <script src="./app.js"></script>
+<script>
+const REGION_SHAPES={gangwon:{label:'강원',d:'M342 74 L476 96 L548 180 L525 283 L438 287 L377 235 L330 152 Z',x:438,y:183},gyeonggi:{label:'경기',d:'M210 138 L330 132 L377 235 L326 305 L214 287 L164 218 Z',x:265,y:236},seoul:{label:'서울',d:'M248 205 L288 199 L306 226 L283 254 L244 244 L232 219 Z',x:269,y:229},incheon:{label:'인천',d:'M155 211 L218 196 L232 221 L219 268 L162 266 L126 239 Z',x:178,y:236},chungbuk:{label:'충북',d:'M326 305 L438 287 L460 372 L393 445 L292 412 L286 334 Z',x:371,y:367},chungnam:{label:'충남',d:'M166 294 L286 334 L292 412 L214 482 L131 427 L111 342 Z',x:203,y:387},sejong:{label:'세종',d:'M252 346 L287 352 L292 388 L259 404 L232 381 Z',x:262,y:379},daejeon:{label:'대전',d:'M268 399 L305 415 L306 455 L264 470 L235 442 Z',x:273,y:437},gyeongbuk:{label:'경북',d:'M460 372 L546 354 L585 449 L544 574 L432 558 L393 445 Z',x:492,y:475},daegu:{label:'대구',d:'M442 480 L496 476 L515 521 L478 554 L428 533 L412 502 Z',x:465,y:517},jeonbuk:{label:'전북',d:'M214 482 L306 455 L369 510 L343 596 L227 607 L168 546 Z',x:273,y:538},gwangju:{label:'광주',d:'M214 623 L256 610 L284 640 L266 678 L219 676 L195 646 Z',x:239,y:649},jeonnam:{label:'전남',d:'M134 566 L227 607 L219 676 L288 692 L252 754 L133 727 L82 650 Z',x:178,y:669},gyeongnam:{label:'경남',d:'M343 596 L432 558 L478 617 L437 701 L320 707 L288 642 Z',x:390,y:641},ulsan:{label:'울산',d:'M503 575 L555 585 L568 636 L529 670 L482 638 Z',x:526,y:624},busan:{label:'부산',d:'M452 681 L529 670 L555 719 L509 761 L443 736 Z',x:497,y:718},jeju:{label:'제주',d:'M185 817 C234 792 315 795 360 825 C318 862 231 865 185 817 Z',x:273,y:830}};
+const aliases={서울:'seoul',서울특별시:'seoul',부산:'busan',부산광역시:'busan',대구:'daegu',대구광역시:'daegu',인천:'incheon',인천광역시:'incheon',광주:'gwangju',광주광역시:'gwangju',대전:'daejeon',대전광역시:'daejeon',울산:'ulsan',울산광역시:'ulsan',세종:'sejong',경기:'gyeonggi',경기도:'gyeonggi',강원:'gangwon',강원도:'gangwon',충북:'chungbuk',충청북도:'chungbuk',충남:'chungnam',충청남도:'chungnam',전북:'jeonbuk',전라북도:'jeonbuk',전남:'jeonnam',전라남도:'jeonnam',경북:'gyeongbuk',경상북도:'gyeongbuk',경남:'gyeongnam',경상남도:'gyeongnam',제주:'jeju',제주도:'jeju'};
+let selected='seoul', metric='priority';
+let rows=[
+ {region:'서울',target_accounts:520,online_invited:420,online_completed:310,ondemand_sent:390,ondemand_completed:260,offline_invited:150,offline_completed:118,smart_fitting_users:210,sample_orders:116,purchase_accounts:61,mf_sales_ratio:.16,toric_sales_ratio:.22,competitor_mentions:12,days_since_last_activity:18},
+ {region:'경기',target_accounts:610,online_invited:390,online_completed:230,ondemand_sent:420,ondemand_completed:210,offline_invited:130,offline_completed:72,smart_fitting_users:140,sample_orders:82,purchase_accounts:37,mf_sales_ratio:.12,toric_sales_ratio:.24,competitor_mentions:15,days_since_last_activity:42},
+ {region:'부산',target_accounts:260,online_invited:180,online_completed:96,ondemand_sent:210,ondemand_completed:88,offline_invited:70,offline_completed:38,smart_fitting_users:38,sample_orders:16,purchase_accounts:7,mf_sales_ratio:.08,toric_sales_ratio:.17,competitor_mentions:10,days_since_last_activity:76},
+ {region:'대구',target_accounts:210,online_invited:120,online_completed:48,ondemand_sent:170,ondemand_completed:52,offline_invited:55,offline_completed:19,smart_fitting_users:24,sample_orders:9,purchase_accounts:3,mf_sales_ratio:.05,toric_sales_ratio:.15,competitor_mentions:7,days_since_last_activity:95},
+ {region:'인천',target_accounts:190,online_invited:130,online_completed:70,ondemand_sent:140,ondemand_completed:66,offline_invited:40,offline_completed:24,smart_fitting_users:47,sample_orders:22,purchase_accounts:10,mf_sales_ratio:.09,toric_sales_ratio:.18,competitor_mentions:4,days_since_last_activity:55},
+ {region:'대전',target_accounts:110,online_invited:70,online_completed:54,ondemand_sent:90,ondemand_completed:66,offline_invited:35,offline_completed:28,smart_fitting_users:43,sample_orders:25,purchase_accounts:16,mf_sales_ratio:.15,toric_sales_ratio:.21,competitor_mentions:2,days_since_last_activity:12},
+ {region:'광주',target_accounts:120,online_invited:60,online_completed:28,ondemand_sent:85,ondemand_completed:30,offline_invited:28,offline_completed:18,smart_fitting_users:20,sample_orders:11,purchase_accounts:4,mf_sales_ratio:.07,toric_sales_ratio:.13,competitor_mentions:9,days_since_last_activity:84},
+ {region:'울산',target_accounts:85,online_invited:48,online_completed:18,ondemand_sent:58,ondemand_completed:16,offline_invited:18,offline_completed:7,smart_fitting_users:8,sample_orders:4,purchase_accounts:1,mf_sales_ratio:.04,toric_sales_ratio:.11,competitor_mentions:5,days_since_last_activity:110},
+ {region:'세종',target_accounts:45,online_invited:30,online_completed:21,ondemand_sent:34,ondemand_completed:22,offline_invited:12,offline_completed:8,smart_fitting_users:15,sample_orders:9,purchase_accounts:5,mf_sales_ratio:.14,toric_sales_ratio:.19,competitor_mentions:1,days_since_last_activity:20},
+ {region:'강원',target_accounts:90,online_invited:48,online_completed:16,ondemand_sent:62,ondemand_completed:18,offline_invited:20,offline_completed:9,smart_fitting_users:9,sample_orders:4,purchase_accounts:1,mf_sales_ratio:.03,toric_sales_ratio:.10,competitor_mentions:3,days_since_last_activity:120},
+ {region:'충북',target_accounts:95,online_invited:54,online_completed:25,ondemand_sent:70,ondemand_completed:28,offline_invited:22,offline_completed:11,smart_fitting_users:16,sample_orders:7,purchase_accounts:2,mf_sales_ratio:.06,toric_sales_ratio:.13,competitor_mentions:3,days_since_last_activity:70},
+ {region:'충남',target_accounts:130,online_invited:78,online_completed:35,ondemand_sent:88,ondemand_completed:34,offline_invited:26,offline_completed:12,smart_fitting_users:21,sample_orders:8,purchase_accounts:3,mf_sales_ratio:.06,toric_sales_ratio:.14,competitor_mentions:6,days_since_last_activity:88},
+ {region:'전북',target_accounts:100,online_invited:58,online_completed:27,ondemand_sent:76,ondemand_completed:31,offline_invited:24,offline_completed:14,smart_fitting_users:18,sample_orders:8,purchase_accounts:3,mf_sales_ratio:.07,toric_sales_ratio:.12,competitor_mentions:4,days_since_last_activity:68},
+ {region:'전남',target_accounts:88,online_invited:44,online_completed:14,ondemand_sent:60,ondemand_completed:16,offline_invited:18,offline_completed:7,smart_fitting_users:7,sample_orders:3,purchase_accounts:1,mf_sales_ratio:.03,toric_sales_ratio:.09,competitor_mentions:5,days_since_last_activity:130},
+ {region:'경북',target_accounts:150,online_invited:80,online_completed:29,ondemand_sent:105,ondemand_completed:32,offline_invited:30,offline_completed:12,smart_fitting_users:18,sample_orders:6,purchase_accounts:2,mf_sales_ratio:.04,toric_sales_ratio:.12,competitor_mentions:6,days_since_last_activity:102},
+ {region:'경남',target_accounts:170,online_invited:98,online_completed:43,ondemand_sent:120,ondemand_completed:48,offline_invited:42,offline_completed:21,smart_fitting_users:28,sample_orders:13,purchase_accounts:5,mf_sales_ratio:.06,toric_sales_ratio:.14,competitor_mentions:8,days_since_last_activity:81},
+ {region:'제주',target_accounts:52,online_invited:30,online_completed:15,ondemand_sent:38,ondemand_completed:17,offline_invited:12,offline_completed:6,smart_fitting_users:8,sample_orders:4,purchase_accounts:2,mf_sales_ratio:.08,toric_sales_ratio:.12,competitor_mentions:1,days_since_last_activity:52}
+];
+const metrics=[['priority','우선순위'],['education','교육완료'],['activation','Smart Fitting'],['conversion','구매전환'],['risk','이탈위험']];
+function n(v){return Number(v)||0} function pct(v){return `${Math.round(v*100)}%`} function clamp(v){return Math.max(0,Math.min(100,v))}
+function enrich(r){
+ const totalTouch=n(r.online_invited)+n(r.ondemand_sent)+n(r.offline_invited);
+ const totalComplete=n(r.online_completed)+n(r.ondemand_completed)+n(r.offline_completed);
+ const online=n(r.online_invited)?n(r.online_completed)/n(r.online_invited):0;
+ const ondemand=n(r.ondemand_sent)?n(r.ondemand_completed)/n(r.ondemand_sent):0;
+ const offline=n(r.offline_invited)?n(r.offline_completed)/n(r.offline_invited):0;
+ const education=totalTouch?totalComplete/totalTouch:0;
+ const activation=n(r.target_accounts)?n(r.smart_fitting_users)/n(r.target_accounts):0;
+ const sampleRate=n(r.smart_fitting_users)?n(r.sample_orders)/n(r.smart_fitting_users):0;
+ const conversion=n(r.sample_orders)?n(r.purchase_accounts)/n(r.sample_orders):0;
+ const functional=(n(r.mf_sales_ratio)+n(r.toric_sales_ratio))/2;
+ const educationScore=clamp(education*100);
+ const activationScore=clamp(activation*160);
+ const conversionScore=clamp(conversion*120);
+ const growthScore=clamp(educationScore*.30+activationScore*.25+conversionScore*.25+functional*100*.20);
+ const riskScore=clamp((1-education)*30+(1-activation)*25+(1-conversion)*20+Math.min(n(r.days_since_last_activity)/120,1)*25);
+ const priorityScore=clamp(growthScore*.55+riskScore*.45+(n(r.competitor_mentions)>6?8:0));
+ let segment='follow', label='🟠 Follow-up Needed';
+ if(growthScore>=72 && conversion>=.45){segment='best'; label='🟢 Best Practice'}
+ else if(growthScore>=62 && conversion<.35){segment='growth'; label='🟣 Growth Opportunity'}
+ else if(riskScore>=65){segment='risk'; label='🔴 At Risk'}
+ return {...r,id:aliases[String(r.region).trim()]||String(r.region).trim(),online,ondemand,offline,education,activation,sampleRate,conversion,functional,educationScore,activationScore,conversionScore,growthScore,riskScore,priorityScore,segment,label};
+}
+function data(){return rows.map(enrich).filter(r=>REGION_SHAPES[r.id])}
+function selectedRow(){return data().find(r=>r.id===selected)||data()[0]}
+function colorFor(r){let v=metric==='education'?r.educationScore:metric==='activation'?r.activationScore:metric==='conversion'?r.conversionScore:metric==='risk'?100-r.riskScore:r.priorityScore; if(v>=70)return '#d1fadf'; if(v>=45)return '#fedf89'; return '#fecdca'}
+function metricValue(r){if(metric==='education')return pct(r.education); if(metric==='activation')return pct(r.activation); if(metric==='conversion')return pct(r.conversion); if(metric==='risk')return Math.round(r.riskScore); return Math.round(r.priorityScore)}
+function insight(r){
+ if(r.segment==='best') return `${r.region}은 교육 완료, 스마트피팅 사용, 구매 전환이 모두 안정적인 우수 지역입니다. Best Practice 사례를 정리해 다른 지역 교육 콘텐츠로 확산하는 것이 좋습니다.`;
+ if(r.segment==='growth') return `${r.region}은 교육과 프로그램 사용 기반은 있으나 구매 전환이 낮습니다. 샘플 지원, 제품별 상담 스크립트, 멀티포컬/난시 실습형 Follow-up을 붙이면 단기 성과 가능성이 높습니다.`;
+ if(r.segment==='risk') return `${r.region}은 교육 완료율 또는 최근 활동성이 낮아 이탈 위험이 높습니다. 신규 교육 초대보다 먼저 담당자 방문/카카오 채널 리마인드/온디맨드 재발송이 필요합니다.`;
+ if(r.education>=.6 && r.activation<.25) return `${r.region}은 교육은 진행됐지만 스마트피팅 사용으로 이어지지 않았습니다. 교육 후 실행 전환이 끊긴 구간입니다.`;
+ if(r.activation>=.25 && r.sampleRate<.35) return `${r.region}은 스마트피팅 사용은 있으나 샘플 주문으로 연결되지 않습니다. 샘플 신청 프로세스와 스타터 키트 안내가 필요합니다.`;
+ return `${r.region}은 일부 지표가 중간 수준입니다. 가장 낮은 Funnel 구간을 중심으로 1~2개 핵심 액션만 집중하는 것이 좋습니다.`;
+}
+function actions(r){
+ if(r.segment==='best') return ['우수 안경원 인터뷰 또는 사례 카드뉴스 제작','해당 지역 담당자의 성공 패턴을 타 지역에 공유','고급 멀티포컬/난시 교육으로 업셀링'];
+ if(r.segment==='growth') return ['샘플 신청 유도 캠페인 진행','멀티포컬/난시 상담 스크립트 제공','구매 미전환 안경원 Top 20 방문'];
+ if(r.segment==='risk') return ['온디맨드 교육 재발송','최근 90일 미활동 안경원 우선 방문','기초 스마트피팅 재교육 세션 운영'];
+ return ['스마트피팅 사용 가이드 재안내','샘플 주문 방법 리마인드','교육 완료 후 2주 내 follow-up 콜'];
+}
+function renderSummary(){const d=data(), sum=k=>d.reduce((a,r)=>a+n(r[k]),0); const touch=sum('online_invited')+sum('ondemand_sent')+sum('offline_invited'); const complete=sum('online_completed')+sum('ondemand_completed')+sum('offline_completed'); const sf=sum('smart_fitting_users'), sample=sum('sample_orders'), purchase=sum('purchase_accounts'); const risk=d.filter(r=>r.segment==='risk').length; const growth=d.filter(r=>r.segment==='growth').length; document.getElementById('summary').innerHTML=[['대상 안경원',sum('target_accounts').toLocaleString(),'전체 관리 모수'],['통합 교육 완료율',pct(complete/touch),'온라인+온디맨드+오프라인'],['Smart Fitting 사용률',pct(sf/sum('target_accounts')),'교육 후 실행 지표'],['샘플→구매 전환율',pct(purchase/sample),'구매 전환 효율'],['Growth 후보',growth+'개 지역','교육/사용 대비 구매 낮음'],['At Risk',risk+'개 지역','최근 활동/완료율 낮음']].map(x=>`<article class="card"><span>${x[0]}</span><strong>${x[1]}</strong><small>${x[2]}</small></article>`).join('')}
+function renderToggle(){document.getElementById('metricToggle').innerHTML=metrics.map(([id,l])=>`<button class="${metric===id?'active':''}" data-metric="${id}">${l}</button>`).join('');document.querySelectorAll('[data-metric]').forEach(b=>b.onclick=()=>{metric=b.dataset.metric;render()})}
+function renderMap(){const d=data(), lookup=Object.fromEntries(d.map(r=>[r.id,r])); const svg=`<svg viewBox="60 50 540 840" aria-label="Korea map"><path d="M344 72 C475 85 584 178 574 326 C566 442 616 528 553 642 C513 716 456 761 342 757 C247 754 137 740 82 650 C35 574 82 485 129 418 C91 330 115 241 190 170 C235 128 276 88 344 72 Z" fill="#fff" stroke="#d0d7e2" stroke-width="6"/>${Object.entries(REGION_SHAPES).map(([id,s])=>{const r=lookup[id];return `<path class="region ${selected===id?'active':''}" data-id="${id}" d="${s.d}" fill="${r?colorFor(r):'#eef2f6'}" stroke="#fff" stroke-width="2.5"/><text class="marker" x="${s.x}" y="${s.y}" text-anchor="middle">${s.label}</text><text class="marker-value" x="${s.x}" y="${s.y+18}" text-anchor="middle">${r?metricValue(r):'-'}</text>`}).join('')}</svg>`;document.getElementById('map').innerHTML=svg;document.querySelectorAll('.region').forEach(p=>p.onclick=()=>{selected=p.dataset.id;render()})}
+function renderDetail(){const r=selectedRow();document.getElementById('detail').innerHTML=`<div class="detail-title"><span class="badge ${r.segment}">${r.label}</span><h2>${r.region} 지역 상세 인사이트</h2><p class="copy">성장점수 ${Math.round(r.growthScore)}점 · 이탈위험 ${Math.round(r.riskScore)}점 · 경쟁사 활동 ${r.competitor_mentions}건</p></div><div class="detail-grid"><div class="metric"><span class="mini-label">온라인 라이브 완료율</span><strong>${pct(r.online)}</strong></div><div class="metric"><span class="mini-label">온디맨드 완료율</span><strong>${pct(r.ondemand)}</strong></div><div class="metric"><span class="mini-label">오프라인 완료율</span><strong>${pct(r.offline)}</strong></div><div class="metric"><span class="mini-label">통합 교육 완료율</span><strong>${pct(r.education)}</strong></div></div><div class="funnel"><article><span class="mini-label">교육완료</span><strong>${Math.round(r.education*100)}%</strong><small>${r.online_completed+r.ondemand_completed+r.offline_completed} completions</small></article><article><span class="mini-label">Smart Fitting</span><strong>${pct(r.activation)}</strong><small>${r.smart_fitting_users} accounts</small></article><article><span class="mini-label">샘플주문</span><strong>${pct(r.sampleRate)}</strong><small>${r.sample_orders} orders</small></article><article><span class="mini-label">구매전환</span><strong>${pct(r.conversion)}</strong><small>${r.purchase_accounts} accounts</small></article></div><div class="score-wrap">${score('Education Score',r.educationScore,'green')}${score('Activation Score',r.activationScore,'')}${score('Conversion Score',r.conversionScore,r.conversionScore<45?'red':'green')}${score('Risk Score',r.riskScore,r.riskScore>=65?'red':'amber')}</div><div class="insight"><h3>자동 인사이트</h3><p>${insight(r)}</p><ul class="actions-list">${actions(r).map(a=>`<li>${a}</li>`).join('')}</ul></div>`}
+function score(label,val,cls){return `<div class="score"><div class="score-head"><span>${label}</span><strong>${Math.round(val)}</strong></div><div class="track"><div class="bar ${cls}" style="width:${clamp(val)}%"></div></div></div>`}
+function renderTable(){document.getElementById('rankTable').innerHTML=data().sort((a,b)=>b.priorityScore-a.priorityScore).map(r=>`<tr class="row-click" data-id="${r.id}"><td>${r.region}</td><td><span class="badge ${r.segment}">${r.label}</span></td><td>${pct(r.education)}</td><td>${pct(r.activation)}</td><td>${pct(r.conversion)}</td><td>${Math.round(r.growthScore)}</td><td>${Math.round(r.riskScore)}</td><td>${insight(r)}</td></tr>`).join('');document.querySelectorAll('.row-click').forEach(tr=>tr.onclick=()=>{selected=tr.dataset.id;window.scrollTo({top:0,behavior:'smooth'});render()})}
+function render(){renderSummary();renderToggle();renderMap();renderDetail();renderTable()}
+function parseWorkbook(file){const reader=new FileReader();reader.onload=e=>{const wb=XLSX.read(e.target.result,{type:'array'});const ws=wb.Sheets[wb.SheetNames[0]];const json=XLSX.utils.sheet_to_json(ws,{defval:0});rows=json.map(x=>Object.fromEntries(Object.entries(x).map(([k,v])=>[String(k).trim(),v])));document.getElementById('fileName').textContent=file.name;selected=(data()[0]||{}).id||'seoul';render()};reader.readAsArrayBuffer(file)}
+document.getElementById('dataFile').addEventListener('change',e=>{const f=e.target.files[0];if(f)parseWorkbook(f)});
+document.getElementById('resetSample').onclick=()=>location.reload();
+document.getElementById('downloadTemplate').onclick=()=>{const header='region,target_accounts,online_invited,online_completed,ondemand_sent,ondemand_completed,offline_invited,offline_completed,smart_fitting_users,sample_orders,purchase_accounts,mf_sales_ratio,toric_sales_ratio,competitor_mentions,days_since_last_activity\n';const blob=new Blob([header],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='acuvue_dashboard_template.csv';a.click();URL.revokeObjectURL(a.href)};
+render();
+</script>
 </body>
 </html>
