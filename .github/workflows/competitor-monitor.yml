@@ -1,21 +1,24 @@
 name: Competitor Monitor
-
 on:
   workflow_dispatch:
-
+  schedule:
+    - cron: "0 23 * * 0"
+permissions:
+  contents: write
 jobs:
   crawl:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-
+          python-version: "3.11"
       - name: Run crawler
         run: python competitor_watch_crawler.py
+      - name: Commit output
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add output/Competitor_Activity.csv
+          git commit -m "Update competitor activity data" || echo "No changes"
+          git push
